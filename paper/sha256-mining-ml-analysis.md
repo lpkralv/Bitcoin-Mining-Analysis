@@ -1,5 +1,8 @@
 # Algorithmic Approaches to SHA-256 Bitcoin Mining: An Empirical Analysis
 
+**Louis Slothouber**
+*March 2026*
+
 *This article presents original empirical results on the feasibility of algorithmic improvements to [Bitcoin mining](https://en.wikipedia.org/wiki/Bitcoin_network#Mining) beyond the known [midstate optimization](https://en.bitcoin.it/wiki/Midstate). For background on SHA-256 and known attacks, see [SHA-2](https://en.wikipedia.org/wiki/SHA-2) and [AsicBoost](https://arxiv.org/abs/1604.00575).*
 
 ---
@@ -36,6 +39,8 @@ Machine learning experiments employed an **AutoResearch** methodology, inspired 
 Training data comprised 943,488 real Bitcoin block headers obtained via the [Electrum protocol](https://electrumx.readthedocs.io/), and re-mined datasets where real header stubs were paired with nonces found from random starting positions (eliminating miner behavioral bias). Statistical significance was assessed with [Bonferroni-corrected](https://en.wikipedia.org/wiki/Bonferroni_correction) z-tests (α = 0.01/32 per nonce bit).
 
 Structural and SAT-based experiments used custom [CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form) encoders, [CryptoMiniSat](https://github.com/msoos/cryptominisat) (with native XOR clause support), [MiniSat](https://en.wikipedia.org/wiki/MiniSat), [CaDiCaL](https://github.com/arminbiere/cadical), and the [Cutting Planes](https://en.wikipedia.org/wiki/Cutting-plane_method) solvers [RoundingSat](https://github.com/jezberg/roundingsat) and [Exact](https://gitlab.com/miao_research/Exact). All C programs were compiled with GCC 13.3 at -O3.
+
+Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic), which wrote training scripts, deployed them to the GPU server, monitored training runs autonomously, and conducted the structural and statistical analyses. The author directed the research strategy, evaluated results, and identified directions for investigation.
 
 ## Summary of Results
 

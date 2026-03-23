@@ -1,6 +1,8 @@
 # Bitcoin Mining Analysis
 
-Empirical analysis of algorithmic approaches to SHA-256 Bitcoin mining. This repository contains the research paper and all supporting code for reproducing the results.
+**Louis Slothouber** | March 2026
+
+Empirical analysis of algorithmic approaches to SHA-256 Bitcoin mining. This repository contains the research paper and all supporting code for reproducing the results. Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic).
 
 ## Paper
 
