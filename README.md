@@ -2,117 +2,142 @@
 
 **Louis Slothouber** | lpslot@gmail.com | March 2026
 
-Empirical analysis of algorithmic approaches to SHA-256 Bitcoin mining. This repository contains the research paper and all supporting code for reproducing the results. Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) methodology by Andrej Karpathy employed to rapidly train and evaluate ML models.
+A large-scale empirical investigation into whether any algorithmic improvement to Bitcoin mining exists beyond the known [midstate](https://en.bitcoin.it/wiki/Midstate) and [AsicBoost](https://arxiv.org/abs/1604.00575) optimizations. Across SAT solving, seven machine learning architectures, evolutionary search, and structural analysis of SHA-256, no method tested showed improvement over brute-force search. Results are consistent with SHA-256 behaving as an unstructured search problem at the mining interface.
+
+**This work does not prove impossibility.** It provides broad empirical evidence across multiple paradigms that no exploitable structure was detected under the conditions tested.
+
+Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) methodology by Andrej Karpathy — automated hyperparameter search and model selection — employed to rapidly evaluate 300+ ML configurations across seven architecture classes.
 
 ## Paper
 
 **[Algorithmic Approaches to SHA-256 Bitcoin Mining: An Empirical Analysis](paper/sha256-mining-ml-analysis.md)**
 
-A large-scale investigation testing whether any algorithmic improvement to Bitcoin mining exists beyond the known midstate precomputation and AsicBoost optimizations. Twelve results spanning SAT solving, machine learning (seven architecture classes, 300+ hyperparameter configurations), evolutionary search, and structural analysis of the SHA-256 compression function. No additional speedup was found among the tested methods.
+Twelve results with full methodology for independent reproduction. Peer-reviewed informally prior to release.
 
 ## Key Findings
 
-1. **SAT solvers** (CDCL, CryptoMiniSat, Cutting Planes) cannot beat brute force
-2. **Neural networks** (139M parameters) cannot approximate SHA-256 even in the forward direction
-3. **Seven ML paradigms** (MLP, VAE, CLIP, diffusion, GAN, RL, transformer) find no nonce-header dependence with random nonces
+1. **SAT solvers** (CDCL, CryptoMiniSat, Cutting Planes) do not beat brute force
+2. **Neural networks** (139M parameters) cannot learn to approximate SHA-256 in the forward direction
+3. **Seven ML paradigms** (MLP, VAE, CLIP, diffusion, GAN, RL, transformer) detect no nonce–header dependence with random nonces
 4. **Real Bitcoin nonces** have rich but non-cryptographic structure (mining pool conventions)
 5. **No intermediate SHA-256 state** predicts hash validity (50M-sample test, 768 state bits)
-6. **Valid nonces are uniformly distributed** with no spatial clustering or easy headers
-7. **CMA-ES** requires 3.8x fewer evaluations but 3.4x slower per evaluation (net ~1.1x)
-8. **Message schedule sparsity** is minimal (2/48 words nonce-independent)
-9. **AND-gate density** provides heuristic measure of inversion difficulty
+6. **Valid nonces** are consistent with uniform distribution — no clustering or easy headers
+7. **CMA-ES** requires 3.8× fewer evaluations but 3.4× slower per evaluation (net ≈1.1×)
+8. **Message schedule sparsity** is minimal (2/48 expanded words nonce-independent)
+9. **AND-gate density** (48K gates, 73.7% from carry chains) provides heuristic measure of inversion difficulty
 10. **Three structural barriers** (parity, carry chains, coupling) make SAT empirically intractable
 11. **No known quantum algorithm** exceeds Grover's quadratic bound for SHA-256 mining
 12. **Double SHA-256** exhibits super-linear SAT coupling penalty
 
+## Paper Results → Code
+
+| Paper Result | Script | Description |
+|---|---|---|
+| Result 1 (SAT) | *(SAT encoders in main project)* | CNF encoding, solver benchmarks |
+| Result 2 (Neural approximation) | `src/ml_experiments/tier2_new_directions.py` | 139M-param hash approximation |
+| Result 3 (ML independence) | `src/ml_experiments/mlp_autoresearch.py`, `reduced_round_ml.py`, `phase3_*.py` | Seven architectures, eight round counts |
+| Result 4 (Miner behavior) | `src/ml_experiments/d1_nonce_analysis.py`, `speedup_benchmark.py` | Nonce structure, feature importance, validity test |
+| Result 5 (Intermediate state) | `src/structural_analysis/crack4_algebraic.c`, `partial_eval_test.c` | 50M-sample state bit correlation |
+| Result 6 (Nonce uniformity) | `src/search_strategies/near_miss_test.py`, `src/structural_analysis/header_optimization.c` | Clustering, near-miss, cross-header variance |
+| Result 7 (CMA-ES) | `src/search_strategies/evolutionary_mining.py`, `cmaes_large_scale.py`, `src/structural_analysis/cmaes_64lz.c` | Evaluation advantage vs rate penalty |
+| Result 8 (Schedule sparsity) | `src/structural_analysis/divide_and_conquer_analysis.py` | Dependency graph analysis |
+| Result 9 (AND-gate density) | `src/structural_analysis/divide_and_conquer_analysis.py` | Gate counting, carry chain analysis |
+| Result 10 (SAT barriers) | `src/ml_experiments/deep_investigation.py` | IPASIR-UP propagator, XOR/carry tests |
+| Result 11 (Quantum) | *(theoretical — see paper)* | Grover bound + structural preconditions |
+| Result 12 (Double hash) | *(SAT encoders in main project)* | Double SHA-256 coupling benchmark |
+
+## Quick Start
+
+### 1. Download Bitcoin block headers (~100 seconds)
+
+```bash
+pip install numpy torch
+python src/data_acquisition/bitcoin_headers_electrum.py --sandbox .
+```
+
+This downloads 940K+ real headers via the Electrum protocol (no API key needed).
+
+### 2. Run the MLP experiment (reproduces Results 3–4)
+
+```bash
+# AutoResearch: searches 80 MLP configurations, trains best to convergence
+python src/ml_experiments/mlp_autoresearch.py --sandbox .
+```
+
+### 3. Run a structural analysis (reproduces Result 5)
+
+```bash
+# Compile and run 50M-sample intermediate state test
+gcc -O3 -o crack4 src/structural_analysis/crack4_algebraic.c -lm
+echo "$(head -1 data/test_stubs.txt)" | ./crack4 50000000
+```
+
+### 4. Run CMA-ES benchmark (reproduces Result 7)
+
+```bash
+gcc -O3 -o cmaes src/structural_analysis/cmaes_64lz.c -lm
+echo "$(head -1 data/test_stubs.txt)" | ./cmaes 1000
+```
+
 ## Repository Structure
 
 ```
-paper/                          # Research paper (Markdown)
+paper/                              Research paper (Markdown)
 src/
-  data_acquisition/             # Bitcoin header download via Electrum protocol
-    bitcoin_headers_electrum.py # Downloads ~940K real block headers (~100 seconds)
-  ml_experiments/               # Machine learning experiments
-    mlp_autoresearch.py         # Phase 2A: MLP hyperparameter search (80 configs)
-    reduced_round_ml.py         # Phase 2C: Reduced-round ML (8 round counts)
-    phase3_vae.py               # Phase 3: VAE/Autoencoder with controls
-    phase3_clip.py              # Phase 3: CLIP dual-encoder
-    phase3_diffusion_gan.py     # Phase 3: Conditional diffusion + WGAN-GP
-    deep_investigation.py       # D2-D4: VAE controls, power tests, high-power 2C
-    tier1_gaps.py               # Gap filling: R=4,5,8 + full-train diffusion/GAN
-    tier2_new_directions.py     # Hash approximation, word-level transformer, timestamp
-    d1_nonce_analysis.py        # Nonce structure characterization (temporal, MI)
-    speedup_benchmark.py        # Model-guided vs random search benchmark
-  structural_analysis/          # SHA-256 structural analysis
-    divide_and_conquer_analysis.py  # Phase 2B: Precomputation, propagation, carry chains
-    sha256_nonce_finder.c       # Fast C nonce finder for reduced-round data generation
-    header_optimization.c       # Test whether some headers are easier to mine
-    partial_eval_test.c         # Test intermediate state predictiveness
-    crack4_algebraic.c          # 50M-sample intermediate state correlation test
-    cmaes_64lz.c                # CMA-ES vs random at high difficulty (4B hashes)
-  search_strategies/            # Alternative search strategies
-    evolutionary_mining.py      # CMA-ES 1D and 32D nonce search
-    cmaes_large_scale.py        # 100-header CMA-ES benchmark
-    near_miss_test.py           # Near-miss gradient structure test
-    overnight_experiments.py    # RL (REINFORCE) + nonce clustering
-data/                           # Generated datasets (not included; see below)
+  data_acquisition/
+    bitcoin_headers_electrum.py     Downloads ~940K real block headers
+  ml_experiments/
+    mlp_autoresearch.py             MLP hyperparameter search (80 configs)
+    reduced_round_ml.py             Reduced-round ML (8 round counts)
+    phase3_vae.py                   VAE/Autoencoder with shuffled + capacity controls
+    phase3_clip.py                  CLIP dual-encoder (contrastive matching)
+    phase3_diffusion_gan.py         Conditional diffusion + WGAN-GP
+    deep_investigation.py           VAE controls, 50K power tests, high-power replication
+    tier1_gaps.py                   Gap filling: R=4,5,8 + full-train diffusion/GAN
+    tier2_new_directions.py         Hash approximation, word-level transformer, timestamp
+    d1_nonce_analysis.py            Nonce structure characterization (temporal, MI)
+    speedup_benchmark.py            Model-guided vs random search benchmark
+  structural_analysis/
+    divide_and_conquer_analysis.py  Precomputation boundary, nonce propagation, carry chains
+    sha256_nonce_finder.c           Fast C nonce finder for reduced-round data generation
+    header_optimization.c           Cross-header valid-nonce variance test
+    partial_eval_test.c             Intermediate state MSB predictiveness test
+    crack4_algebraic.c              50M-sample intermediate state correlation (768 bits)
+    cmaes_64lz.c                    CMA-ES vs random at high difficulty (4B hashes)
+  search_strategies/
+    evolutionary_mining.py          CMA-ES 1D and 32D nonce search
+    cmaes_large_scale.py            100-header CMA-ES benchmark
+    near_miss_test.py               Near-miss gradient structure test
+    overnight_experiments.py        RL (REINFORCE) + nonce clustering analysis
+data/                               Generated datasets (see Data Acquisition above)
 ```
 
-## Reproducing Results
+## Data
 
-### Prerequisites
+All datasets are generated from public blockchain data:
 
-- Python 3.11+ with PyTorch, NumPy
-- NVIDIA GPU with CUDA 12.1+ (for ML experiments)
-- GCC (for C programs)
+- **Bitcoin block headers**: Downloaded via [Electrum protocol](https://electrumx.readthedocs.io/) from public servers. No API key or account needed. ~940K headers in ~100 seconds.
+- **Re-mined datasets**: Generated locally by the scripts. Real header structure with random nonce starting positions to eliminate miner behavioral bias.
+- **Reduced-round datasets**: Generated by `sha256_nonce_finder` (C) for configurable SHA-256 round counts.
 
-### Data Acquisition
+No pre-built datasets are included in the repository. All data can be regenerated from scratch using the provided scripts.
 
-```bash
-# Download ~940K real Bitcoin block headers (~100 seconds)
-python src/data_acquisition/bitcoin_headers_electrum.py --sandbox .
+## Hardware
 
-# Generate difficulty-stratified datasets
-python src/data_acquisition/bitcoin_headers_electrum.py --sandbox . --stratified
-```
+All experiments are reproducible on consumer-grade hardware:
 
-### ML Experiments
+- **GPU**: NVIDIA RTX 4070 Ti (12 GB VRAM) — ML training and evaluation
+- **CPU**: Apple M4 Mac Mini — analysis, C programs, coordination
+- **Compiler**: GCC 13.3 at -O3
 
-```bash
-# MLP AutoResearch (80-config search + full training)
-python src/ml_experiments/mlp_autoresearch.py --sandbox .
+## Future Directions
 
-# Reduced-round ML (8 round counts)
-# First compile the C nonce finder:
-gcc -O3 -o sha256_nonce_finder src/structural_analysis/sha256_nonce_finder.c
-python src/ml_experiments/reduced_round_ml.py --sandbox .
-```
+Areas not covered by this investigation that may warrant further study:
 
-### Structural Analysis (C programs)
-
-```bash
-# Compile
-gcc -O3 -o header_optimization src/structural_analysis/header_optimization.c -lm
-gcc -O3 -o partial_eval_test src/structural_analysis/partial_eval_test.c -lm
-gcc -O3 -o crack4_algebraic src/structural_analysis/crack4_algebraic.c -lm
-gcc -O3 -o cmaes_64lz src/structural_analysis/cmaes_64lz.c -lm
-
-# Run (each reads a hex-encoded 76-byte header stub from stdin)
-echo "<hex_stub>" | ./header_optimization 8 1000000
-echo "<hex_stub>" | ./crack4_algebraic 50000000
-echo "<hex_stub>" | ./cmaes_64lz 4000
-```
-
-## External Data
-
-- **Bitcoin block headers**: Downloaded via Electrum protocol from public servers (no API key needed)
-- **Re-mined datasets**: Generated locally using random nonce starts on real header stubs
-
-## Hardware Used
-
-- NVIDIA RTX 4070 Ti (12 GB VRAM) — ML training
-- Apple M4 Mac Mini — analysis and coordination
-- All experiments reproducible on consumer-grade hardware
+- **Formal proof complexity**: Whether SHA-256 mining admits a formal exponential lower bound in resolution or stronger proof systems remains open.
+- **Non-classical computing**: Photonic or neuromorphic approaches to hash evaluation.
+- **Larger neural architectures**: Models beyond 139M parameters (e.g., billion-parameter transformers) were not tested.
+- **Multi-block optimization**: Exploiting structure across multiple block templates simultaneously.
 
 ## License
 
