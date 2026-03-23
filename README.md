@@ -12,7 +12,7 @@ Experiments and analysis were performed using [Claude Code](https://claude.ai/cl
 
 **[Algorithmic Approaches to SHA-256 Bitcoin Mining: An Empirical Analysis](paper/sha256-mining-ml-analysis.md)**
 
-Twelve results with full methodology for independent reproduction. Peer-reviewed informally prior to release.
+Twelve results with full methodology for independent reproduction. AI peer-reviewed prior to release.
 
 ## Key Findings
 
