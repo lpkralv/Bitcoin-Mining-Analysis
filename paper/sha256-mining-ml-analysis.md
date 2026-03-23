@@ -5,8 +5,6 @@
 
 *This article presents original empirical results on the feasibility of algorithmic improvements to [Bitcoin mining](https://en.wikipedia.org/wiki/Bitcoin_network#Mining) beyond the known [midstate optimization](https://en.bitcoin.it/wiki/Midstate). For background on SHA-256 and known attacks, see [SHA-2](https://en.wikipedia.org/wiki/SHA-2) and [AsicBoost](https://arxiv.org/abs/1604.00575).*
 
-*This research was conducted independently, on the author's own time and using personal resources. It is not affiliated with, sponsored by, or representative of any employer.*
-
 ---
 
 ## Background
@@ -246,6 +244,12 @@ Approximate mining (Vilim et al., 2016) explored trading hash accuracy for throu
 All experiments were conducted on consumer-grade hardware: an NVIDIA RTX 4070 Ti GPU (12 GB VRAM) with CUDA 12.1, an Apple M4 Mac Mini for analysis, and GCC 13.3 for C programs. Bitcoin block headers were obtained via the Electrum protocol (943,488 headers, covering blocks 0 through ≈941,500 as of March 2026). Re-mined datasets used random nonce starting positions to eliminate miner behavioral bias.
 
 Source code, generated datasets, and links to external data sources will be published in the accompanying GitHub repository.
+
+---
+
+## Disclosure
+
+This research was conducted independently, on the author's own time and using personal resources. It is not affiliated with, sponsored by, or representative of any employer.
 
 ---
 

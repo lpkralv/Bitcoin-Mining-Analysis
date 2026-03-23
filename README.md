@@ -2,8 +2,6 @@
 
 **Louis Slothouber** | lpslot@gmail.com | March 2026
 
-*This research was conducted independently, on the author's own time and using personal resources. It is not affiliated with, sponsored by, or representative of any employer.*
-
 Empirical analysis of algorithmic approaches to SHA-256 Bitcoin mining. This repository contains the research paper and all supporting code for reproducing the results. Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) methodology by Andrej Karpathy employed to rapidly train and evaluate ML models.
 
 ## Paper
@@ -119,6 +117,8 @@ echo "<hex_stub>" | ./cmaes_64lz 4000
 ## License
 
 MIT
+
+This research was conducted independently, on the author's own time and using personal resources. It is not affiliated with, sponsored by, or representative of any employer.
 
 ## Citation
 
