@@ -40,7 +40,7 @@ Training data comprised 943,488 real Bitcoin block headers obtained via the [Ele
 
 Structural and SAT-based experiments used custom [CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form) encoders, [CryptoMiniSat](https://github.com/msoos/cryptominisat) (with native XOR clause support), [MiniSat](https://en.wikipedia.org/wiki/MiniSat), [CaDiCaL](https://github.com/arminbiere/cadical), and the [Cutting Planes](https://en.wikipedia.org/wiki/Cutting-plane_method) solvers [RoundingSat](https://github.com/jezberg/roundingsat) and [Exact](https://gitlab.com/miao_research/Exact). All C programs were compiled with GCC 13.3 at -O3.
 
-Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic), which wrote training scripts, deployed them to the GPU server, monitored training runs autonomously, and conducted the structural and statistical analyses. The author directed the research strategy, evaluated results, and identified directions for investigation.
+Experiments and analysis were performed by the author using [Claude Code](https://claude.ai/claude-code) (Anthropic), which wrote training scripts, deployed them to the GPU server, monitored training runs autonomously, and conducted the structural and statistical analyses. The author directed the research strategy, evaluated results, and identified directions for investigation.
 
 ## Summary of Results
 

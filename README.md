@@ -6,7 +6,7 @@ A large-scale empirical investigation into whether any algorithmic improvement t
 
 **This work does not prove impossibility.** It provides broad empirical evidence across multiple paradigms that no exploitable structure was detected under the conditions tested.
 
-Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) methodology by Andrej Karpathy — automated hyperparameter search and model selection — employed to rapidly evaluate 300+ ML configurations across seven architecture classes.
+Experiments and analysis were performed by the author using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) methodology by Andrej Karpathy — automated hyperparameter search and model selection — employed to rapidly evaluate 300+ ML configurations across seven architecture classes.
 
 ## Paper
 
