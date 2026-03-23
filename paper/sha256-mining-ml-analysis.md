@@ -151,12 +151,13 @@ Maximum observed probability ratio across all 768 tests: 1.013 (bit 2 of the rou
 
 **Claim.** [CMA-ES](https://en.wikipedia.org/wiki/CMA-ES) 32-dimensional bitwise nonce search requires 3.8× fewer hash evaluations than random search to reach the same maximum leading-zero count, but the computational overhead of population management reduces the net wall-clock advantage to ≈1.1×.
 
-**Evidence.** For 3 headers, 4 billion hash evaluations were budgeted per method (C implementation, single-threaded):
+**Evidence.** For 5 headers, 4 billion hash evaluations were budgeted per method (C implementation, single-threaded):
 
 | Metric | Random search | CMA-ES 32D |
 |---|---|---|
 | Hash rate | 2.8 Mh/s | 0.8 Mh/s |
-| Best LZ achieved (4B budget) | 30–32 | 30–32 |
+| Best LZ achieved (4B budget) | 30–32 | 30–31 |
+| LZ advantage across 5 headers | — | 4 ties, 1 loss (−1) |
 | Evals to first reach LZ = 30 | 1.26 billion | 329 million |
 | Evals to first reach LZ = 8 | 433 | 56 |
 
