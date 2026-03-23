@@ -2,7 +2,7 @@
 
 **Louis Slothouber** | March 2026
 
-Empirical analysis of algorithmic approaches to SHA-256 Bitcoin mining. This repository contains the research paper and all supporting code for reproducing the results. Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) by Andrej Karpathy employed to rapidly train and evaluate ML models across 300+ hyperparameter configurations.
+Empirical analysis of algorithmic approaches to SHA-256 Bitcoin mining. This repository contains the research paper and all supporting code for reproducing the results. Experiments and analysis were performed using [Claude Code](https://claude.ai/claude-code) (Anthropic). [AutoResearch](https://github.com/karpathy/autoresearch) methodology by Andrej Karpathy employed to rapidly train and evaluate ML models.
 
 ## Paper
 
