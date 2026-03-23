@@ -243,7 +243,7 @@ Approximate mining (Vilim et al., 2016) explored trading hash accuracy for throu
 
 All experiments were conducted on consumer-grade hardware: an NVIDIA RTX 4070 Ti GPU (12 GB VRAM) with CUDA 12.1, an Apple M4 Mac Mini for analysis, and GCC 13.3 for C programs. Bitcoin block headers were obtained via the Electrum protocol (943,488 headers, covering blocks 0 through ≈941,500 as of March 2026). Re-mined datasets used random nonce starting positions to eliminate miner behavioral bias.
 
-Source code, generated datasets, and links to external data sources will be published in the accompanying GitHub repository.
+All source code for reproducing these experiments is included in this repository. See the top-level README for instructions.
 
 ---
 
