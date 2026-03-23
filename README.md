@@ -1,4 +1,4 @@
-# Bitcoin Mining Analysis
+# SHA-256 Mining Analysis
 
 **Louis Slothouber** | lpslot@gmail.com | March 2026
 
@@ -165,5 +165,5 @@ If you use this work, please cite:
 
 ```
 Slothouber, L. (2026). "Algorithmic Approaches to SHA-256 Bitcoin Mining:
-An Empirical Analysis." GitHub: Bitcoin-Mining-Analysis.
+An Empirical Analysis." GitHub: sha256-mining-analysis.
 ```
