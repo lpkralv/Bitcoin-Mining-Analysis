@@ -29,6 +29,20 @@ Twelve results with full methodology for independent reproduction. Peer-reviewed
 11. **No known quantum algorithm** exceeds Grover's quadratic bound for SHA-256 mining
 12. **Double SHA-256** exhibits super-linear SAT coupling penalty
 
+## Figures
+
+### ML Architecture Comparison
+![ML Comparison](figures/plot_ml_comparison.png)
+*All seven ML paradigms tested on re-mined data with random nonces. No architecture exceeds the 50% random baseline.*
+
+### Intermediate State Predictiveness
+![Intermediate State](figures/plot_intermediate_state.png)
+*50 million nonces tested. The maximum conditional probability ratio across 768 state bits never exceeds noise levels at any compression round.*
+
+### CMA-ES: Evaluation Advantage vs Rate Penalty
+![CMA-ES](figures/plot_cmaes.png)
+*CMA-ES requires fewer hash evaluations (blue) but runs slower per evaluation (orange). The advantages approximately cancel in wall-clock time.*
+
 ## Paper Results → Code
 
 | Paper Result | Script | Description |

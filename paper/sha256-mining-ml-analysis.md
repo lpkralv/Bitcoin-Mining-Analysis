@@ -98,6 +98,9 @@ All architectures were trained to convergence (up to 500 epochs, patience 20–5
 
 These controls establish that the autoencoder's nonce reconstruction is a compression artifact, not evidence of header–nonce structure.
 
+![ML Architecture Comparison](../figures/plot_ml_comparison.png)
+*Figure 1: Best accuracy or validity rate achieved by each ML paradigm on re-mined data. All results are within noise of the 50% random baseline.*
+
 **Implication.** The negative result spans supervised prediction, unsupervised compression, contrastive matching, generative modeling (both denoising and adversarial), reinforcement learning, and attention-based architectures. Each paradigm embodies a fundamentally different hypothesis about what learnable structure might exist; the uniform null across all seven paradigms is consistent with the absence of learnable structure at the nonce–header interface, though it does not constitute a proof of impossibility.
 
 ## Result 4: Real Bitcoin Nonces Exhibit Non-Cryptographic Behavioral Structure
@@ -122,6 +125,9 @@ These controls establish that the autoencoder's nonce reconstruction is a compre
 To test this, 50 million random nonces were evaluated for a fixed header. The full 256-bit compression state was recorded at six checkpoint rounds (4, 6, 8, 60, 62, 63) — spanning from just after the nonce enters (round 4) to the final round (round 63). For each of 768 state bits (6 checkpoints × 256 bits), the conditional probability of hash validity (≥ 8 leading zeros, Bitcoin format) was computed separately for samples where the state bit was 0 vs. 1. Under the null hypothesis (no predictive value), these probabilities should be equal.
 
 Maximum observed probability ratio across all 768 tests: 1.013 (bit 2 of the round-63 state). No bit achieved significance after Bonferroni correction (*z* > 3.5 required for 256 simultaneous tests per checkpoint). With 50 million samples, even a 0.1% conditional probability difference would have been detectable.
+
+![Intermediate State Predictiveness](../figures/plot_intermediate_state.png)
+*Figure 2: Maximum conditional probability ratio across 256 state bits at each checkpoint round. All values fall within the ±1% noise band, indicating zero predictive value.*
 
 **Implication.** No evidence was found that would enable early termination of the compression function based on intermediate state inspection at any round tested, including the very last. This is consistent with SHA-256's [avalanche effect](https://en.wikipedia.org/wiki/Avalanche_effect): bit-level dependency tracking shows that every output bit of the compression state depends on every input bit by approximately round 8 (verified empirically via symbolic dependency propagation). The final hash value is computed by adding the round-64 working state to the input state, a step that depends on all state registers simultaneously.
 
@@ -155,6 +161,9 @@ Maximum observed probability ratio across all 768 tests: 1.013 (bit 2 of the rou
 | Evals to first reach LZ = 8 | 433 | 56 |
 
 The evaluation advantage (3.8× at LZ = 30, 7.7× at LZ = 8) reflects CMA-ES's superior exploration of the combinatorial bit-space through covariance adaptation. However, the per-evaluation overhead (Gaussian sampling, population selection, mean update) reduces the effective hash rate to 29% of random search, nearly canceling the evaluation advantage in wall-clock time.
+
+![CMA-ES Evaluation Advantage vs Rate Penalty](../figures/plot_cmaes.png)
+*Figure 3: CMA-ES requires fewer evaluations (blue) but hashes slower per evaluation (orange). The advantages approximately cancel.*
 
 **Implication.** CMA-ES reduces the number of hash evaluations needed through adaptive sampling of the 32-bit combinatorial space, but this advantage is not specific to SHA-256 — CMA-ES would show similar evaluation advantages on any function mapping 32-bit inputs to a scalar quality metric. The per-evaluation overhead of the evolutionary algorithm nearly cancels the evaluation savings in wall-clock time. For [ASIC](https://en.wikipedia.org/wiki/Application-specific_integrated_circuit) miners where hash throughput is the bottleneck and per-hash cost approaches zero, CMA-ES provides no practical benefit.
 
