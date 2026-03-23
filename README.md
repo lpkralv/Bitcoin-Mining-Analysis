@@ -155,9 +155,13 @@ Areas not covered by this investigation that may warrant further study:
 
 ## License
 
-MIT
+This work is licensed under [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/). You may share and adapt the material with attribution for non-commercial purposes.
 
 This research was conducted independently, on the author's own time and using personal resources. It is not affiliated with, sponsored by, or representative of any employer.
+
+## Contributing
+
+This repository is a research archive. Pull requests are not accepted.
 
 ## Citation
 
